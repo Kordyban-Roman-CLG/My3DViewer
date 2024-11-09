@@ -44,6 +44,10 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
         echo "vcpkg-root=${{ github.workspace }}/vcpkg" >> "$GITHUB_OUTPUT"
 
+    - name: Install build tools (Linux)
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config
+
     - name: Install vcpkg
       run: |
         git clone https://github.com/microsoft/vcpkg.git ${{ steps.strings.outputs.vcpkg-root }}

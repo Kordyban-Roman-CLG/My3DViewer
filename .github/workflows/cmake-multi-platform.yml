@@ -46,7 +46,7 @@ jobs:
 
     - name: Install build tools (Linux)
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config
+      run: sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config libglfw3
 
     - name: Install vcpkg
       shell: bash
@@ -77,11 +77,3 @@ jobs:
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
-
-    - name: Upload Artifacts
-    - uses: actions/upload-artifact@v4
-      with:
-        name: build
-        path: out/
-        retention-days: 3
-        compression-level: 9

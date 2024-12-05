@@ -1,53 +1,66 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <iostream>
+#include "ViewerWindow.hpp"
+#include "OpenglRenderSystem.hpp"
+#include "GeometryPrimitives.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
+#include <glm/gtc/matrix_transform.hpp>
+
+void renderScene(OpenglRenderSystem &rs)
+{
+    static const auto &data = GeometryPrimitives::createPyramidVertices();
+    rs.renderTriangleSoup(data);
 }
 
-int main() {
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
+void moveCube(OpenglRenderSystem &rs,glm::vec3 offset)
+{
+    rs.setViewMatrix(glm::translate(rs.getViewMatrix(),offset));
+}
+
+int main()
+{
+    constexpr int width = 640;
+    constexpr int height = 480;
+
+    OpenglRenderSystem rs;
+    ViewerWindow window("myWindow",width,height);
+
+    window.setKeyCallback([&rs](KeyCode key,Action action,Modifier mods)
+    {
+        if(key == KeyCode::UP)
+            moveCube(rs,{0,0.1,0});
+
+        if(key == KeyCode::DOWN)
+            moveCube(rs,{0,-0.1,0});
+
+        if(key == KeyCode::LEFT)
+            moveCube(rs,{0.1,0,0});
+
+        if(key == KeyCode::RIGHT)
+            moveCube(rs,{-0.1,0,0});
+    });
+
+    rs.init();
+    rs.setupLight(0,glm::vec3(0,5,0),glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1));
+    rs.turnLight(0,true);
+
+    glm::vec3 cameraPosition(-1.0f,1.0f,-3.0f);
+    //glm::vec3 cameraPosition(0.0f,0.0f,-3.0f);
+    glm::vec3 lookAtCenter(0.0f,0.0f,0.0f);
+    glm::vec3 cameraUpVector(0.0f,2.0f,0.0f);
+
+    glm::mat4 viewMatrix = glm::lookAt(cameraPosition,lookAtCenter,cameraUpVector);
+    rs.setViewMatrix(viewMatrix);
+
+    glm::mat4 projMatrix = glm::perspective(glm::radians(60.0f),float(width) / float(height),0.1f,500.f);
+    rs.setProjectionMatrix(projMatrix);
+
+    while(!glfwWindowShouldClose(window.getGLFWHandle()))
+    {
+        rs.setViewport(0,0,window.getWidth(),window.getHeight());
+        rs.clearDisplay(0.5f,0.5f,0.5f);
+        renderScene(rs);
+        glfwSwapBuffers(window.getGLFWHandle());
+        glfwWaitEvents();
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Hello OpenGL", nullptr, nullptr);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    // Ініціалізація GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    // Налаштовуємо OpenGL
-    glViewport(0, 0, 800, 600);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    // Основний цикл
-    while (!glfwWindowShouldClose(window)) {
-        // Очистка екрану
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Обробка подій
-        glfwPollEvents();
-
-        // Обмін кадрами
-        glfwSwapBuffers(window);
-    }
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
     return 0;
 }

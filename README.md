@@ -10,7 +10,7 @@ cd ./My3DViewer
 ```
 2. Bootstrap vcpkg
 ```
-sh ./vcpkg/bootstrap-vcpkg.sh`
+sh ./vcpkg/bootstrap-vcpkg.sh
 ```
 3. Integrate vcpkg
 ```

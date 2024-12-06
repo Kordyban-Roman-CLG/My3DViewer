@@ -10,7 +10,7 @@
 - `./vcpkg/vcpkg integrate install`
 4. Install dependencies
 - `./vcpkg/vcpkg install`
-
+- `sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config libglfw3`
 </details>
 <details><summary>Windows</summary>
   

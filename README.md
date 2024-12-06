@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/3cce06c7-bfe2-4cdb-a7f1-7ff0bae8e140)
+
 # Quickstart
 <details><summary>Linux</summary>
 
@@ -21,7 +23,7 @@ sh ./vcpkg/bootstrap-vcpkg.sh
 ./vcpkg/vcpkg install
 ```
 ```
-sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config libglfw3
+sudo apt-get update && sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa pkg-config
 ```
 </details>
 <details><summary>Windows</summary>
